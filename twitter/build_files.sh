@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "BUILD START"
 
 # Create a virtual environment named 'venv' if it doesn't already exist
