@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load static %}
 
 {% block title %}Home{% endblock %}
 {% load humanize %}
@@ -23,6 +23,10 @@
           {% csrf_token %}
           <div class="form-group">
             <textarea maxlength="200" rows="4" type="text" class="form-control" id="text" name="text" placeholder="What's on your mind?"></textarea>
+            <!-- Placeholder for error messages -->
+            <div class="alert alert-danger mt-2" role="alert" id="error-message" style="display: none;">
+              <span id="error-text"></span>
+            </div>
           </div>
           <div class="new-tweet-bottom">
             <button type="submit" class="btn twitter-btn" id="new-tweet-btn">Tweet</button>
@@ -76,8 +80,9 @@
           action: 'post'
         },
         success:function(json) {
-          console.log('success')
+          console.log('success');
           document.getElementById("tweet-form").reset();
+          $("#error-message").hide();  // Hide error message if any previous errors
           $("#prepend").prepend(
             '<div class="tweet">' +
                 '<div class="tweet-header">' +
@@ -92,11 +97,13 @@
                 '<i class="far fa-heart" id="like' + json.tweetpk + '" data-tweetid="' + json.tweetpk + '"></i>' +
                 '<span id="likecount' + json.tweetpk + '"> ' + json.tweetlikecount + '</span>' +
             '</div>'
-          )
+          );
         },
-
         error:function(xhr, errmsg, err) {
-          console.log(xhr.status + ": " + xhr.responseText)
+          console.log(xhr.status + ": " + xhr.responseText);
+          // Display error message to the user
+          $('#error-text').text(xhr.responseJSON.error);
+          $('#error-message').show();
         }
       });
     });
@@ -113,8 +120,6 @@
         },
 
         success: function(json) {
-          // $('#like' + id).removeClass('far');
-          // $('#like' + id).addClass('fas');
           $('#likecount' + id).text(json.likecount);
           if(json.delete == true) {
             $('#like' + id).removeClass('fas').addClass('far');

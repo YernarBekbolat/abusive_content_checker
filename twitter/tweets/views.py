@@ -4,6 +4,7 @@ from tweets.forms import TweetForm, CommentForm
 from tweets.models import Tweet, Comment, Likes
 from django.http import HttpResponse, JsonResponse
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from .predictor import is_abusive, model, vocab
 import json
 
 """
@@ -14,16 +15,20 @@ import json
 @login_required
 def newtweet(request):
     res = {}
-    if request.method =='POST':
+    if request.method == 'POST':
         text = request.POST.get('text')
         user = request.user
+
+        # Check if the tweet is abusive
+        if is_abusive(text, model, vocab):
+            return JsonResponse({'error': 'Your tweet is offensive and cannot be posted.'}, status=400)
 
         res['text'] = text
         res['username'] = user.username
 
         tweet = Tweet.objects.create(
-            user = request.user,
-            text = text,
+            user=request.user,
+            text=text,
         )
 
         # Pass the tweet that was just created for the prepend() method

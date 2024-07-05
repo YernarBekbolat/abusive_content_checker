@@ -9,6 +9,7 @@ class Tweet(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='tweets', on_delete=models.CASCADE)
     created_date = models.DateTimeField(default=timezone.now)
     text = models.CharField(max_length=200, blank=False, null=False)
+    is_abusive = models.BooleanField(default=False)
 
     # Order by most recent always
     class Meta:

@@ -4,8 +4,6 @@ import datetime
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-from django.utils.timezone import utc
-
 
 class Migration(migrations.Migration):
 
@@ -20,7 +18,7 @@ class Migration(migrations.Migration):
             name='Tweet',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_date', models.DateTimeField(default=datetime.datetime(2020, 2, 6, 2, 37, 57, 305273, tzinfo=utc))),
+                ('created_date', models.DateTimeField(default=datetime.datetime(2020, 2, 6, 2, 37, 57, 305273, tzinfo=datetime.timezone.utc))),
                 ('text', models.CharField(max_length=200)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
